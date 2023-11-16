@@ -1,0 +1,88 @@
+trigger:
+  - none
+
+name: "$(Build.DefinitionName)$(Rev:.r)"
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: Plan
+    jobs:
+      - job: Plan
+        timeoutInMinutes: 0
+        steps:
+          - task: Bash@3
+            displayName: tfValidate
+            inputs:
+              filePath: .azdo-pipelines/scripts/terraform-with-backend.sh
+              workingDirectory: $(WorkingDirectory)
+              arguments: validate
+            env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              BACKEND_RESOURCE_GROUP_NAME: $(BACKEND_RESOURCE_GROUP_NAME)
+              BACKEND_STORAGE_ACCOUNT_NAME: $(BACKEND_STORAGE_ACCOUNT_NAME)
+              BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME: $(BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME)
+              TF_BACKEND_KEY: $(ApplicationName)-$(EnvironmentName)
+
+          - task: Bash@3
+            displayName: tfPlan
+            inputs:
+              filePath: .azdo-pipelines/scripts/terraform-with-backend.sh
+              workingDirectory: $(WorkingDirectory)
+              arguments: plan -var-file=_$(EnvironmentName).tfvars
+            env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              BACKEND_RESOURCE_GROUP_NAME: $(BACKEND_RESOURCE_GROUP_NAME)
+              BACKEND_STORAGE_ACCOUNT_NAME: $(BACKEND_STORAGE_ACCOUNT_NAME)
+              BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME: $(BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME)
+              TF_BACKEND_KEY: $(ApplicationName)-$(EnvironmentName)
+
+  - stage: Apply
+    jobs:
+      - deployment: Apply
+        timeoutInMinutes: 0
+        environment:
+          name: $(EnvironmentName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: Bash@3
+                  displayName: tfValidate
+                  inputs:
+                    filePath: .azdo-pipelines/scripts/terraform-with-backend.sh
+                    workingDirectory: $(WorkingDirectory)
+                    arguments: validate
+                  env:
+                    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                    ARM_TENANT_ID: $(ARM_TENANT_ID)
+                    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                    BACKEND_RESOURCE_GROUP_NAME: $(BACKEND_RESOURCE_GROUP_NAME)
+                    BACKEND_STORAGE_ACCOUNT_NAME: $(BACKEND_STORAGE_ACCOUNT_NAME)
+                    BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME: $(BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME)
+                    TF_BACKEND_KEY: $(ApplicationName)-$(EnvironmentName)
+
+                - task: Bash@3
+                  displayName: tfApply
+                  inputs:
+                    filePath: .azdo-pipelines/scripts/terraform-with-backend.sh
+                    workingDirectory: $(WorkingDirectory)
+                    arguments: apply -auto-approve -var-file=_$(EnvironmentName).tfvars
+                  env:
+                    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                    ARM_TENANT_ID: $(ARM_TENANT_ID)
+                    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                    BACKEND_RESOURCE_GROUP_NAME: $(BACKEND_RESOURCE_GROUP_NAME)
+                    BACKEND_STORAGE_ACCOUNT_NAME: $(BACKEND_STORAGE_ACCOUNT_NAME)
+                    BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME: $(BACKEND_STORAGE_ACCOUNT_CONTAINER_NAME)
+                    TF_BACKEND_KEY: $(ApplicationName)-$(EnvironmentName)

@@ -2,66 +2,66 @@ variable "tenant" {
   type = string
 }
 
-variable "Enabled" {
+variable "enabled" {
   type    = string
   default = "enabled"
 }
 
-variable "Off" {
+variable "off" {
   type    = string
   default = "disabled"
 }
 
-variable "Report-only" {
+variable "report_only" {
   type    = string
   default = "enabledForReportingButNotEnforced"
 }
 
-variable "pol-blockLegacyAuth" {
+variable "pol_block_legacy_auth" {
   type = string
 }
 
-variable "pol-apply-user-AllowBYoDAccess" {
+variable "pol_apply_user_allow_byod_access" {
   type = string
 }
 
-variable "pol-apply-user-BYoDCAExclusion" {
+variable "pol_apply_user_byod_ca_exclusion" {
   type = string
 }
 
-variable "pol-apply-user-ExtBYoDCAExclusion" {
+variable "pol_apply_user_ext_byod_ca_exclusion" {
   type = string
 }
 
-variable "Intune-Users" {
+variable "intune_users" {
   type = string
 }
 
-variable "RPA-User-Bots" {
+variable "rpa_user_bots" {
   type = string
 }
 
-variable "CA002-Test-RING" {
+variable "ca002_test_ring" {
   type = string
 }
 
-variable "CA004-Test-RING" {
+variable "ca004_test_ring" {
   type = string
 }
 
-variable "CA007-Test-RING" {
+variable "ca007_test_ring" {
   type = string
 }
 
-variable "blockedLocations" {
+variable "blocked_locations" {
   type = string
 
 }
 
-variable "Test-MAM" {
+variable "test_mam" {
   type = string
 }
 
-variable "break-glass" {
+variable "break_glass" {
   type = string
 }

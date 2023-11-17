@@ -1,4 +1,4 @@
-tenant                               = "Org-2"
+tenant                               = "Org-1"
 ca002_test_ring                      = "17282314-6754-4b38-812e-6711a9a2ca6c"
 ca004_test_ring                      = "52c75dc3-2033-45c3-87a1-35097a6b2cc8"
 ca007_test_ring                      = "ae7ea4c8-2ea6-4a05-860e-490fc8c35f4f"
